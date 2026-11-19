@@ -2,8 +2,7 @@
 
 A small tool for picking electronic parts and laptops, comparing their specs, and putting together a shopping list for your next project.
 
-**Live demo:** add your link here after the first deploy
-
+**Live demo:** https://alhusseinaliabdrabbomuhammad-eng.github.io/tech-hardware-builder/
 ## What it does
 
 - Browse 31 sample parts: microcontrollers, sensors, logic ICs, prototyping gear and laptops
