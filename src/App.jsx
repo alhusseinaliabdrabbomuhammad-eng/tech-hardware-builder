@@ -1,16 +1,21 @@
 import { useState } from "react";
 import { products, categories } from "./data/products.js";
+import { formatPrice } from "./utils/format.js";
 import Filters from "./components/Filters.jsx";
 import ProductCard from "./components/ProductCard.jsx";
+import Cart from "./components/Cart.jsx";
 import "./App.css";
 
 function App() {
   // الفلاتر
-  // كل قيمة هنا هي حالة وأول ما بتتغير الصفحة بتتحدث لوحدها
   const [category, setCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+
+  // سلة المشروع
+  // كل عنصر فيها فيه كود القطعة واسمها وسعرها والكمية
+  const [kit, setKit] = useState([]);
 
   // القطع اللي هتظهر بعد تطبيق الفلاتر
   const searchText = search.trim().toLowerCase();
@@ -24,6 +29,13 @@ function App() {
     return matchCategory && matchSearch && matchMin && matchMax;
   });
 
+  // الإجمالي بيتحسب من السلة في كل مرة، علشان كده بيتحدث لحظيا
+  const totalItems = kit.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = kit.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
+
   function resetFilters() {
     setCategory("All");
     setSearch("");
@@ -31,11 +43,43 @@ function App() {
     setMaxPrice("");
   }
 
-  // مؤقتا الأزرار بتطبع في الكونسول بس وهنربطها بالسلة والمقارنة بعدين
   function addToKit(product) {
-    console.log("Add to kit:", product.name);
+    const existing = kit.find((item) => item.id === product.id);
+    if (existing) {
+      // القطعة موجودة في السلة، فنزود الكمية بس
+      changeQuantity(product.id, 1);
+    } else {
+      const newItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+      };
+      setKit([...kit, newItem]);
+    }
   }
 
+  function changeQuantity(id, change) {
+    // نغير كمية القطعة المطلوبة وباقي القطع زي ما هي
+    const updated = kit.map((item) => {
+      if (item.id === id) {
+        return { ...item, quantity: item.quantity + change };
+      }
+      return item;
+    });
+    // أي قطعة كميتها وصلت صفر بتتشال من السلة
+    setKit(updated.filter((item) => item.quantity > 0));
+  }
+
+  function removeFromKit(id) {
+    setKit(kit.filter((item) => item.id !== id));
+  }
+
+  function clearKit() {
+    setKit([]);
+  }
+
+  // مؤقتا زرار المقارنة بيطبع في الكونسول بس وهنربطه في الخطوة الجاية
   function toggleCompare(product) {
     console.log("Compare:", product.name);
   }
@@ -47,6 +91,15 @@ function App() {
           <h1>Tech & Hardware Builder</h1>
           <p>Pick parts, compare specs, and build your project kit.</p>
         </div>
+
+        {/* ملخص السلة بيفضل ظاهر فوق، والضغط عليه بينزل للسلة */}
+        <a className="kit-pill" href="#kit">
+          <span>My kit</span>
+          <strong>{totalItems} items</strong>
+          <strong key={totalPrice} className="kit-pill-total">
+            {formatPrice(totalPrice)}
+          </strong>
+        </a>
       </header>
 
       <main className="layout">
@@ -88,6 +141,17 @@ function App() {
             </div>
           )}
         </section>
+
+        <aside className="sidebar" id="kit">
+          <Cart
+            items={kit}
+            totalItems={totalItems}
+            totalPrice={totalPrice}
+            onChangeQuantity={changeQuantity}
+            onRemove={removeFromKit}
+            onClear={clearKit}
+          />
+        </aside>
       </main>
 
       <footer className="app-footer">
