@@ -7,14 +7,43 @@
   border-radius: 14px;
 }
 
-.search-input,
-.price-row input {
-  width: 100%;
-  padding: 10px 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+.filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
+
+.filters-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.btn-add-product {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-add-product:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.search-input,
+  .price-row input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    white-space: nowrap;
+  }
 
 .search-input:focus,
 .price-row input:focus {
@@ -29,15 +58,16 @@
 }
 
 .chip-button {
-  padding: 6px 14px;
-  color: var(--muted);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  transition:
-    border-color 0.15s ease,
-    color 0.15s ease;
-}
+    padding: 6px 14px;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+    white-space: nowrap;
+  }
 
 .chip-button:hover {
   color: var(--text);
@@ -52,11 +82,12 @@
 }
 
 .price-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 12px;
-}
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    white-space: nowrap;
+  }
 
 .price-row label {
   display: grid;

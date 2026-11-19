@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { products, categories } from "./data/products.js";
-import { loadKit, saveKit } from "./utils/storage.js";
+import { getCombinedProducts, categories, categories as staticCategories, products } from "./data/products.js";
+import { loadKit, saveKit, loadCustomProducts, saveCustomProducts } from "./utils/storage.js";
 import { formatPrice } from "./utils/format.js";
 import Filters from "./components/Filters.jsx";
 import ProductCard from "./components/ProductCard.jsx";
@@ -8,6 +8,7 @@ import Cart from "./components/Cart.jsx";
 import ExportButtons from "./components/ExportButtons.jsx";
 import CompareBar from "./components/CompareBar.jsx";
 import CompareModal from "./components/CompareModal.jsx";
+import AddProductModal from "./components/AddProductModal.jsx";
 import "./App.css";
 
 function App() {
@@ -17,25 +18,40 @@ function App() {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
-  // سلة المشروع
-  // كل عنصر فيها فيه كود القطعة واسمها وسعرها والكمية
-  // بنكتب اسم الدالة من غير أقواس علشان تتشغل مرة واحدة بس لما الصفحة تفتح
+  // السلة
   const [kit, setKit] = useState(loadKit);
 
+  // جميع المنتجات (أساسية + محفوظة)
+  const [allProducts, setAllProducts] = useState(() => {
+    const custom = loadCustomProducts();
+    const combined = custom.length === 0 ? products : [...products, ...custom];
+    return combined;
+  });
+
+  // المنتجات المضافة محلياً
+  const [customProducts, setCustomProducts] = useState(() => loadCustomProducts());
+
   // المقارنة
-  // القطع المختارة للمقارنة اتنين على الأكتر
   const [compareList, setCompareList] = useState([]);
-  // نافذة المقارنة مفتوحة ولا لأ
   const [showCompare, setShowCompare] = useState(false);
 
-  // أي تغيير في السلة بيتحفظ في المتصفح تلقائيا
+  // إضافة منتج جديد
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  // الفئات الديناميكية
+  const [dynamicCategories, setDynamicCategories] = useState(categories);
+
   useEffect(() => {
     saveKit(kit);
-  }, [kit]);
+  }, [kit])
+
+  useEffect(() => {
+    updateCategories()
+  }, [])
 
   // القطع اللي هتظهر بعد تطبيق الفلاتر
   const searchText = search.trim().toLowerCase();
-  const visibleProducts = products.filter((product) => {
+  const visibleProducts = allProducts.filter((product) => {
     const matchCategory = category === "All" || product.category === category;
     const matchSearch = (product.name + " " + product.chip)
       .toLowerCase()
@@ -59,10 +75,20 @@ function App() {
     setMaxPrice("");
   }
 
+  function addNewProduct(product) {
+    const customProducts = loadCustomProducts();
+    if (!customProducts.find((p) => p.id === product.id)) {
+      const updatedCustom = [...customProducts, product];
+      saveCustomProducts(updatedCustom);
+      setCustomProducts(updatedCustom);
+      setAllProducts((prev) => [...prev, product]);
+      updateCategories();
+    }
+  }
+
   function addToKit(product) {
     const existing = kit.find((item) => item.id === product.id);
     if (existing) {
-      // القطعة موجودة في السلة، فنزود الكمية بس
       changeQuantity(product.id, 1);
     } else {
       const newItem = {
@@ -105,7 +131,19 @@ function App() {
     }
   }
 
-  // المقارنة مسموحة بين قطعتين بس، ومن نفس الفئة
+  function updateCategories() {
+    const customProducts = loadCustomProducts();
+    const extraCategories = Object.keys(
+      customProducts.reduce((acc, p) => {
+        acc[p.category] = true
+        return acc
+      }, {})
+    );
+    const merged = [...staticCategories, ...extraCategories];
+    const unique = merged.filter((v, i, a) => a.indexOf(v) === i)
+    setDynamicCategories(unique)
+  }
+
   function isCompareDisabled(product) {
     const alreadySelected = compareList.some((item) => item.id === product.id);
     if (alreadySelected) return false;
@@ -143,21 +181,22 @@ function App() {
 
       <main className="layout">
         <section className="catalog">
-          <Filters
-            categories={categories}
-            category={category}
-            onCategoryChange={setCategory}
-            search={search}
-            onSearchChange={setSearch}
-            minPrice={minPrice}
-            onMinPriceChange={setMinPrice}
-            maxPrice={maxPrice}
-            onMaxPriceChange={setMaxPrice}
-            onReset={resetFilters}
-          />
+<Filters
+              categories={dynamicCategories}
+              category={category}
+              onCategoryChange={setCategory}
+              search={search}
+              onSearchChange={setSearch}
+              minPrice={minPrice}
+              onMinPriceChange={setMinPrice}
+              maxPrice={maxPrice}
+              onMaxPriceChange={setMaxPrice}
+              onReset={resetFilters}
+              onAddProduct={() => setShowAddModal(true)}
+            />
 
           <p className="results-count">
-            Showing {visibleProducts.length} of {products.length} parts
+            Showing {visibleProducts.length} of {allProducts.length} parts
           </p>
 
           {visibleProducts.length === 0 ? (
@@ -206,6 +245,14 @@ function App() {
         onOpen={() => setShowCompare(true)}
         onClear={clearCompare}
       />
+
+      {showAddModal && (
+        <AddProductModal
+          categories={dynamicCategories}
+          onSubmit={addNewProduct}
+          onClose={() => setShowAddModal(false)}
+        />
+      )}
 
       {showCompare && compareList.length === 2 && (
         <CompareModal

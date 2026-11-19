@@ -22,7 +22,6 @@ export const categoryColors = {
 };
 
 export const products = [
-  // الميكروكنترولر
   {
     id: "arduino-uno-r3",
     name: "Arduino Uno R3",
@@ -519,3 +518,30 @@ export const products = [
     },
   },
 ];
+
+export function loadCustomProducts() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem("tech-hardware-builder:custom-products")
+    );
+    return Array.isArray(saved) ? saved : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveCustomProducts(products) {
+  try {
+    localStorage.setItem(
+      "tech-hardware-builder:custom-products",
+      JSON.stringify(products)
+    );
+  } catch {
+    // لو التخزين مش متاح
+  }
+}
+
+export function getCombinedProducts() {
+  const customProducts = loadCustomProducts();
+  return customProducts.length === 0 ? products : [...products, ...customProducts];
+}
