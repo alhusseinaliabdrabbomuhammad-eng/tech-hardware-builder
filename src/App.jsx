@@ -4,6 +4,8 @@ import { formatPrice } from "./utils/format.js";
 import Filters from "./components/Filters.jsx";
 import ProductCard from "./components/ProductCard.jsx";
 import Cart from "./components/Cart.jsx";
+import CompareBar from "./components/CompareBar.jsx";
+import CompareModal from "./components/CompareModal.jsx";
 import "./App.css";
 
 function App() {
@@ -16,6 +18,12 @@ function App() {
   // سلة المشروع
   // كل عنصر فيها فيه كود القطعة واسمها وسعرها والكمية
   const [kit, setKit] = useState([]);
+
+  // المقارنة
+  // القطع المختارة للمقارنة اتنين على الأكتر
+  const [compareList, setCompareList] = useState([]);
+  // نافذة المقارنة مفتوحة ولا لأ
+  const [showCompare, setShowCompare] = useState(false);
 
   // القطع اللي هتظهر بعد تطبيق الفلاتر
   const searchText = search.trim().toLowerCase();
@@ -79,9 +87,32 @@ function App() {
     setKit([]);
   }
 
-  // مؤقتا زرار المقارنة بيطبع في الكونسول بس وهنربطه في الخطوة الجاية
+  // اختيار القطعة للمقارنة أو إلغاء اختيارها
   function toggleCompare(product) {
-    console.log("Compare:", product.name);
+    const alreadySelected = compareList.some((item) => item.id === product.id);
+    if (alreadySelected) {
+      setCompareList(compareList.filter((item) => item.id !== product.id));
+    } else {
+      setCompareList([...compareList, product]);
+    }
+  }
+
+  // المقارنة مسموحة بين قطعتين بس، ومن نفس الفئة
+  function isCompareDisabled(product) {
+    const alreadySelected = compareList.some((item) => item.id === product.id);
+    if (alreadySelected) return false;
+    if (compareList.length === 2) return true;
+    if (
+      compareList.length === 1 &&
+      compareList[0].category !== product.category
+    )
+      return true;
+    return false;
+  }
+
+  function clearCompare() {
+    setCompareList([]);
+    setShowCompare(false);
   }
 
   return (
@@ -132,8 +163,10 @@ function App() {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  isComparing={false}
-                  compareDisabled={false}
+                  isComparing={compareList.some(
+                    (item) => item.id === product.id,
+                  )}
+                  compareDisabled={isCompareDisabled(product)}
                   onAdd={addToKit}
                   onToggleCompare={toggleCompare}
                 />
@@ -158,6 +191,20 @@ function App() {
         Sample data for demonstration. Prices and specs are approximate, so
         check the datasheet or the store before buying.
       </footer>
+
+      <CompareBar
+        items={compareList}
+        onOpen={() => setShowCompare(true)}
+        onClear={clearCompare}
+      />
+
+      {showCompare && compareList.length === 2 && (
+        <CompareModal
+          first={compareList[0]}
+          second={compareList[1]}
+          onClose={() => setShowCompare(false)}
+        />
+      )}
     </div>
   );
 }
