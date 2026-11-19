@@ -1,0 +1,81 @@
+.filters {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.search-input,
+.price-row input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.search-input:focus,
+.price-row input:focus {
+  border-color: var(--green);
+  outline: none;
+}
+
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip-button {
+  padding: 6px 14px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.chip-button:hover {
+  color: var(--text);
+  border-color: var(--green);
+}
+
+.chip-button.active {
+  font-weight: 600;
+  color: #04130a;
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.price-row label {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  min-width: 120px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.results-count {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.no-results {
+  padding: 32px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+}
