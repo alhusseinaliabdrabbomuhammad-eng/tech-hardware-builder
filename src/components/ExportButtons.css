@@ -1,0 +1,33 @@
+.export-box {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.export-box h2 {
+  font-size: 1.05rem;
+}
+
+.export-box p {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.export-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* زر النسخ واخد الصف كله */
+.export-buttons .btn:first-child {
+  grid-column: 1 / -1;
+}
+
+.export-box .export-message {
+  min-height: 1.2em;
+  color: var(--green);
+}

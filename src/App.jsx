@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { products, categories } from "./data/products.js";
+import { loadKit, saveKit } from "./utils/storage.js";
 import { formatPrice } from "./utils/format.js";
 import Filters from "./components/Filters.jsx";
 import ProductCard from "./components/ProductCard.jsx";
 import Cart from "./components/Cart.jsx";
+import ExportButtons from "./components/ExportButtons.jsx";
 import CompareBar from "./components/CompareBar.jsx";
 import CompareModal from "./components/CompareModal.jsx";
 import "./App.css";
@@ -17,13 +19,19 @@ function App() {
 
   // سلة المشروع
   // كل عنصر فيها فيه كود القطعة واسمها وسعرها والكمية
-  const [kit, setKit] = useState([]);
+  // بنكتب اسم الدالة من غير أقواس علشان تتشغل مرة واحدة بس لما الصفحة تفتح
+  const [kit, setKit] = useState(loadKit);
 
   // المقارنة
   // القطع المختارة للمقارنة اتنين على الأكتر
   const [compareList, setCompareList] = useState([]);
   // نافذة المقارنة مفتوحة ولا لأ
   const [showCompare, setShowCompare] = useState(false);
+
+  // أي تغيير في السلة بيتحفظ في المتصفح تلقائيا
+  useEffect(() => {
+    saveKit(kit);
+  }, [kit]);
 
   // القطع اللي هتظهر بعد تطبيق الفلاتر
   const searchText = search.trim().toLowerCase();
@@ -184,6 +192,7 @@ function App() {
             onRemove={removeFromKit}
             onClear={clearKit}
           />
+          <ExportButtons items={kit} totalPrice={totalPrice} />
         </aside>
       </main>
 
