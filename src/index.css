@@ -1,15 +1,15 @@
-/* الألوان والستايل العام للموقع كله */
+/* Creative Warm Amber, Copper & Teal Theme */
 :root {
-  --bg: #0a111f;
-  --panel: #101a2f;
-  --panel-2: #15213a;
-  --border: #22304f;
-  --text: #e7edf8;
-  --muted: #8fa0bf;
-  --green: #22c55e;
-  --red: #f87171;
+  --bg: #120e0b;
+  --panel: #1c1612;
+  --panel-2: #271f19;
+  --border: #3d3026;
+  --text: #faf5ef;
+  --muted: #b8a898;
+  --green: #e59a3c;
+  --red: #e05a36;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -27,18 +27,9 @@ body {
   line-height: 1.5;
   color: var(--text);
   background-color: var(--bg);
-  /* خطوط خفيفة تشبه لوحة الدوائر */
   background-image:
-    linear-gradient(rgba(34, 197, 94, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 197, 94, 0.05) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-h1,
-h2,
-h3,
-p {
-  margin: 0;
+    linear-gradient(rgba(229, 154, 60, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(229, 154, 60, 0.045) 1px, transparent 1px);
 }
 
 button,
@@ -61,31 +52,35 @@ button:disabled {
   outline-offset: 2px;
 }
 
-/* أزرار بنستخدمها في أكتر من مكان */
+/* Shared button base style */
 .btn {
   padding: 8px 12px;
   background: var(--panel-2);
   border: 1px solid var(--border);
   border-radius: 8px;
-  transition: border-color 0.15s ease, filter 0.15s ease;
+  font-family: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .btn:hover:not(:disabled) {
-  border-color: var(--green);
+  background: #3d2e2a;
+  border-color: #5a4a40;
 }
 
+/* Primary call-to-action button */
 .btn-primary {
   background: var(--green);
   border-color: var(--green);
-  color: #04130a;
+  color: #000000;
   font-weight: 600;
 }
 
 .btn-primary:hover:not(:disabled) {
-  filter: brightness(1.1);
+  background: #d48f2a;
+  border-color: #d48f2a;
 }
 
-/* حركة صغيرة بتتكرر لما السعر يتغير */
+/* Animation for price changes */
 @keyframes pop {
   from {
     transform: scale(1.15);
@@ -95,7 +90,7 @@ button:disabled {
   }
 }
 
-/* لو المستخدم مفعّل تقليل الحركة في جهازه منعمل حركة خالص */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

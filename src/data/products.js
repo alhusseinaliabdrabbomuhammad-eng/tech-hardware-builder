@@ -14,11 +14,11 @@ export const categories = [
 
 // لون كل فئة، بنستخدمه في شكل الكارت
 export const categoryColors = {
-  Microcontrollers: "#22c55e",
-  Sensors: "#22d3ee",
-  "Logic ICs": "#f59e0b",
-  Prototyping: "#a78bfa",
-  Laptops: "#60a5fa",
+  Microcontrollers: "#2ec4b6",
+  Sensors: "#f4a261",
+  "Logic ICs": "#e76f51",
+  Prototyping: "#e9c46a",
+  Laptops: "#4ea8de",
 };
 
 export const products = [

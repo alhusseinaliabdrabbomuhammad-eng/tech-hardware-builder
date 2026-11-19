@@ -76,9 +76,10 @@
 
 .chip-button.active {
   font-weight: 600;
-  color: #04130a;
+  color: #120e0b;
   background: var(--green);
   border-color: var(--green);
+  background: linear-gradient(135deg, #f0b35b 0%, #c86d3b 100%);
 }
 
 .price-row {

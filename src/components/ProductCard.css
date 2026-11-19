@@ -126,5 +126,7 @@
 
 .btn-selected {
   border-color: var(--green);
-  color: var(--green);
+  background: linear-gradient(135deg, #eab354 0%, #c96836 100%);
+  color: #120e0b;
+  font-weight: 700;
 }
