@@ -18,6 +18,9 @@ function App() {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
+  // الثيم - الوضع الليلي افتراضي، أو يُقرأ من localStorage
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
   // السلة
   const [kit, setKit] = useState(loadKit);
 
@@ -49,6 +52,11 @@ function App() {
     updateCategories()
   }, [])
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   // القطع اللي هتظهر بعد تطبيق الفلاتر
   const searchText = search.trim().toLowerCase();
   const visibleProducts = allProducts.filter((product) => {
@@ -73,6 +81,10 @@ function App() {
     setSearch("");
     setMinPrice("");
     setMaxPrice("");
+  }
+
+  function toggleTheme() {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   }
 
   function addNewProduct(product) {
@@ -177,6 +189,15 @@ function App() {
             {formatPrice(totalPrice)}
           </strong>
         </a>
+
+        {/* زر تبديل الثيم */}
+        <button
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
       </header>
 
       <main className="layout">

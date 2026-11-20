@@ -88,3 +88,7 @@
   background: rgba(229, 154, 60, 0.16);
   border-radius: 999px;
 }
+
+[data-theme="light"] .modal-backdrop {
+  background: rgba(28, 22, 18, 0.5);
+}

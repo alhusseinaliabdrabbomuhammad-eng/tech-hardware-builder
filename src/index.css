@@ -1,23 +1,29 @@
-/* Creative Warm Amber, Copper & Teal Theme */
+/* Warm Espresso & Golden Sand Theme */
 :root {
-  --bg: #120e0b;
+  --bg: #18120e;
   --panel: #1c1612;
   --panel-2: #271f19;
   --border: #3d3026;
   --text: #faf5ef;
-  --muted: #b8a898;
+  --muted: #b5a695;
   --green: #e59a3c;
-  --red: #e05a36;
+  --red: #c85a32;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  color-scheme: light;
+  color-scheme: dark;
+  --grid-line: rgba(229, 154, 60, 0.045);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
+/* Light mode overrides */
+[data-theme="light"] {
+  --bg: #f6f3ee;
+  --panel: #ffffff;
+  --panel-2: #efeae2;
+  --border: #dfd6c9;
+  --text: #1c1612;
+  --muted: #6b5e51;
+  --green: #c97a26;
+  --red: #c84b31;
+  --grid-line: rgba(28, 22, 18, 0.04);
 }
 
 body {
@@ -28,8 +34,17 @@ body {
   color: var(--text);
   background-color: var(--bg);
   background-image:
-    linear-gradient(rgba(229, 154, 60, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(229, 154, 60, 0.045) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 button,
